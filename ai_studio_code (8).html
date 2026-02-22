@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorry Fatima 🤕</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        
+        body {
+            background: linear-gradient(135deg, #fff5f7 0%, #fff 100%);
+            font-family: 'Quicksand', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        /* Floating Hearts */
+        .heart-bg {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.4);
+            animation: floatUp 8s infinite linear;
+            z-index: 0;
+            font-size: 24px;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            to { transform: translateY(-10vh) rotate(360deg); opacity: 1; }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #ffccd5;
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.2);
+            position: relative;
+            z-index: 10;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.1s;
+        }
+
+        /* Glitch/Shake Effect for Slap */
+        .shake { animation: shake 0.3s ease-in-out; border-color: red; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+        h1 { font-family: 'Fredoka', sans-serif; color: #ff4d6d; font-size: 28px; margin-bottom: 10px; }
+        p { color: #555; font-size: 16px; margin-bottom: 20px; line-height: 1.6; }
+
+        .screen { display: none; width: 100%; animation: popIn 0.5s ease; }
+        .active { display: block; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Buttons */
+        .btn {
+            background: #ff4d6d; color: white; border: none; padding: 12px 30px; border-radius: 50px;
+            font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+            transition: 0.2s; margin-top: 10px;
+        }
+        .btn:active { transform: scale(0.95); }
+
+        /* Scanner Animation */
+        .scanner-box {
+            width: 100%; height: 150px; background: #000; border-radius: 10px; 
+            position: relative; overflow: hidden; margin-bottom: 20px; display: flex;
+            align-items: center; justify-content: center; color: #0f0; font-family: monospace;
+        }
+        .scan-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 5px; 
+            background: #0f0; box-shadow: 0 0 10px #0f0;
+            animation: scan 2s infinite linear;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* Slap Emoji */
+        .slap-face { font-size: 80px; transition: 0.2s; display: block; margin-bottom: 10px; }
+        
+        /* Runaway Button */
+        .run-btn { position: absolute; background: #555; font-size: 12px; padding: 10px 15px; }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<script>
+    // Create Background Hearts
+    for(let i=0; i<15; i++){
+        let h = document.createElement('div'); h.className='heart-bg'; h.innerText='💖';
+        h.style.left = Math.random()*100+'vw'; h.style.animationDuration = Math.random()*3+5+'s';
+        document.body.appendChild(h);
+    }
+</script>
+
+<div class="container" id="mainBox">
+
+    <!-- PAGE 1: OOPS -->
+    <div class="screen active" id="s1">
+        <div style="font-size: 60px;">🙊</div>
+        <h1>Oops! Galti Ho Gayi...</h1>
+        <p>Fatima ji, mujhse ek "Choti" si (asli mein badi) galti ho gayi.</p>
+        <p>Mera dimaag offline chala gaya tha jab maine us reel wali ke haathon ki tareef ki.</p>
+        <button class="btn" onclick="next(2)">Investigation Karein? 🕵️‍♂️</button>
+    </div>
+
+    <!-- PAGE 2: THE SCANNER -->
+    <div class="screen" id="s2">
+        <h1>Hand Scanner 3000 📠</h1>
+        <p>Chaliye scientific check karte hain ki kiske haath best hain.</p>
+        
+        <div class="scanner-box" id="scanScreen">
+            <div class="scan-line"></div>
+            <span id="scanText">Scanning Reel Girl...</span>
+        </div>
+
+        <button class="btn" id="scanBtn" onclick="startScan()">Start Scan 🔴</button>
+    </div>
+
+    <!-- PAGE 3: THE SLAP (NEW) -->
+    <div class="screen" id="s3">
+        <h1>Gussa Nikaalein 😤</h1>
+        <p>Mujhe pata hai apko gussa aa raha hai. Chalo, hisaab barabar karte hain.</p>
+        <div class="slap-face" id="face">🤕</div>
+        <p>Tap karke Rexx ko thappad lagayein!</p>
+        <button class="btn" style="background: #d00000;" onclick="slap()">Slap Rexx 👋</button>
+        <p id="ouchMsg" style="color: red; font-size: 14px; height: 20px; margin-top: 5px;"></p>
+        
+        <button class="btn" id="nextAfterSlap" style="display:none; background: #444; margin-top: 20px;" onclick="next(4)">Bas, Maaf kiya 🥺</button>
+    </div>
+
+    <!-- PAGE 4: THE RUNAWAY -->
+    <div class="screen" id="s4">
+        <div style="font-size: 60px;">🐒</div>
+        <h1>Maafi-Nama 🙏</h1>
+        <p>Maine kaan pakad liye hain. (Dono haathon se).</p>
+        <p>Wada: Aaj ke baad no looking at other girls' hands. Sirf Apke Haath = Jannat. ❤️</p>
+        <p>Kya ap mujhe maaf karengi?</p>
+
+        <div style="height: 120px; position: relative; width: 100%; display: flex; justify-content: center; align-items: center;">
+            <button class="btn" onclick="celebrate()" style="z-index: 100;">Haan, Maaf Kiya 💖</button>
+            <button class="btn run-btn" id="noBtn" onmouseover="runAway()" onclick="runAway()">Nahi 😤</button>
+        </div>
+    </div>
+
+    <!-- PAGE 5: CELEBRATION -->
+    <div class="screen" id="s5">
+        <div style="font-size: 70px;">💏</div>
+        <h1>I Love You!</h1>
+        <p>Thank you meri Jaan! ❤️</p>
+        <p>Ap duniya ki sabse achi GF hain.</p>
+        <p>Ab smile kijiye, warna main fir se thappad khaane aa jaunga.</p>
+    </div>
+
+</div>
+
+<script>
+    function next(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('s'+id).classList.add('active');
+    }
+
+    // SCANNER LOGIC
+    function startScan() {
+        const txt = document.getElementById('scanText');
+        const btn = document.getElementById('scanBtn');
+        btn.style.display = 'none';
+
+        txt.innerText = "Scanning Reel Girl...";
+        setTimeout(() => {
+            txt.innerText = "❌ ERROR: Fake Hands Detected!";
+            txt.style.color = "red";
+            setTimeout(() => {
+                txt.innerText = "Scanning Fatima...";
+                txt.style.color = "#0f0";
+                setTimeout(() => {
+                    txt.innerText = "✅ RESULT: 100% Beautiful (Jannat) ✨";
+                    setTimeout(() => next(3), 2000);
+                }, 2000);
+            }, 2000);
+        }, 2000);
+    }
+
+    // SLAP LOGIC
+    let slaps = 0;
+    function slap() {
+        slaps++;
+        const box = document.getElementById('mainBox');
+        const face = document.getElementById('face');
+        const msg = document.getElementById('ouchMsg');
+        
+        // Shake Effect
+        box.classList.remove('shake');
+        void box.offsetWidth; // trigger reflow
+        box.classList.add('shake');
+
+        // Change Face
+        face.innerText = slaps % 2 === 0 ? "😣" : "😭";
+        
+        // Random Ouch Messages
+        const msgs = ["Ouch!", "Sorry na!", "Aaram se!", "Maaf kar do!", "Haath toot jayega!"];
+        msg.innerText = msgs[Math.floor(Math.random() * msgs.length)];
+
+        if(slaps >= 5) {
+            document.getElementById('nextAfterSlap').style.display = 'inline-block';
+        }
+    }
+
+    // RUNAWAY LOGIC
+    function runAway() {
+        const btn = document.getElementById('noBtn');
+        const x = Math.random() * 200 - 100;
+        const y = Math.random() * 100 - 50;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    // CELEBRATION
+    function celebrate() {
+        next(5);
+        const duration = 3000, end = Date.now() + duration;
+        (function frame() {
+            confetti({ particleCount: 5, spread: 60, origin: { y: 0.6 } });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        }());
+    }
+</script>
+
+</body>
+</html>
